@@ -1,11 +1,13 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import md5File from 'yhutils/src/md5sumFile';
+import md5File from 'yhutils/lib/md5sumFile';
 
 function App() {
-  const md5files = async (evt) => {
-    let result = await md5File(evt.files[0])
+  const [md5, setMd5] = React.useState('');
+  const handleMd5files = async (evt) => {
+    let result = await md5File(evt.target.files[0])
+    setMd5(result);
     console.log('md5files', result);
   }
   return (
@@ -25,8 +27,8 @@ function App() {
         </a>
       </header>
       <div>
-        <div>md5文件</div>
-        <input type='file' onChange={} />
+  <div>md5文件:{md5}</div>
+        <input type='file' onChange={handleMd5files} />
       </div>
     </div>
   );
