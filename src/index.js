@@ -11,4 +11,3 @@ export { default as dataUrlToBlob } from './dataUrlToBlob';
 export { default as imageDataUrlScale } from './imageDataUrlScale';
 export { default as imageFileScale } from './imageFileScale';
 export { default as imageFileScaleList } from './imageFileScaleList';
-

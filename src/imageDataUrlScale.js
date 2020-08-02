@@ -9,8 +9,12 @@ export const DEFAULT_MAX_HEIGHT = 720;
  * @param {json} srcRect 原始矩形宽高 {width, height}
  * @param {json} param1 选项参数{keepRatio:是否保持宽高比,maxWidth,maxHeight最大宽高,默认为720}
  */
-export function calcDestRect  ( srcRect, opts)  {
-  let {maxWidth = DEFAULT_MAX_WIDTH, maxHeight = DEFAULT_MAX_HEIGHT,keepRatio = true} = opts||{};
+export function calcDestRect(srcRect, opts) {
+  let {
+    maxWidth = DEFAULT_MAX_WIDTH,
+    maxHeight = DEFAULT_MAX_HEIGHT,
+    keepRatio = true
+  } = opts || {};
   if (!maxWidth && !maxHeight) {
     console.log(
       'option missing! maxWidth=',
@@ -49,7 +53,7 @@ export function calcDestRect  ( srcRect, opts)  {
     }
   }
   return { width: Math.floor(destWidth), height: Math.floor(destHeight) };
-};
+}
 
 /**
  * 将dataUrl类型图片缩放, 返回dataUrl及文件名.
@@ -57,13 +61,17 @@ export function calcDestRect  ( srcRect, opts)  {
  * @param {json} opts 选项参数{keepRatio:是否保持宽高比,maxWidth,maxHeight最大宽高,默认为720}
  * @returns { dataUrl, name:[name], width, height }
  */
-export function dataUrlScale ( data, opts) {
+export function dataUrlScale(data, opts) {
   let name = data.name;
   let dataUrl = data.dataUrl;
   if (!name) {
     name = dataUrl.indexOf(';base64,') < 0 ? dataUrlName(dataUrl) : 'noname';
   }
-  let {maxWidth = DEFAULT_MAX_WIDTH, maxHeight = DEFAULT_MAX_HEIGHT,keepRatio = true} = opts || {};
+  let {
+    maxWidth = DEFAULT_MAX_WIDTH,
+    maxHeight = DEFAULT_MAX_HEIGHT,
+    keepRatio = true
+  } = opts || {};
 
   /* 
     output: { width, height, dataUrl, [name] }
@@ -72,7 +80,6 @@ export function dataUrlScale ( data, opts) {
     let img = new Image();
     img.setAttribute('crossOrigin', 'anonymous');
     img.onload = function() {
-
       let destRect = calcDestRect(
         { width: this.width, height: this.height },
         { maxWidth, maxHeight, keepRatio }
@@ -106,6 +113,6 @@ export function dataUrlScale ( data, opts) {
 
     img.src = dataUrl;
   });
-};
+}
 
 export default dataUrlScale;

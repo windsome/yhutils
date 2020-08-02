@@ -8,9 +8,7 @@ const CHUNKEDV2_URL_END = PREFIX + '/apis/v1/upload/chunked/end';
 const DEFAULT_CHUNK_SIZE = 1024 * 1024;
 
 let slice =
-File.prototype.slice ||
-File.prototype.mozSlice ||
-File.prototype.webkitSlice;
+  File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
 
 /**
  * 初始化上传信息，将文件及hash告知服务器，服务器判断是否上传。
@@ -32,8 +30,8 @@ File.prototype.webkitSlice;
  * }
  * @returns {json} 上传结果 {status, url}
  */
-async function uploadFileStart  (file, opts = {}) {
-  let {hash=null, onprogress=null} = opts || {};
+async function uploadFileStart(file, opts = {}) {
+  let { hash = null, onprogress = null } = opts || {};
   if (!file) {
     throw new Error('no file!');
   }
@@ -55,7 +53,7 @@ async function uploadFileStart  (file, opts = {}) {
   }
 
   return result;
-};
+}
 
 /**
  * 上传文件的一块数据chunk
@@ -70,7 +68,7 @@ async function uploadFileStart  (file, opts = {}) {
  *  onprogress进度回调
  * }
  */
-async function uploadFileChunk (file, destname, pos, count, opts) { 
+async function uploadFileChunk(file, destname, pos, count, opts) {
   if (!file) {
     throw new Error('no file!');
   }
@@ -87,7 +85,7 @@ async function uploadFileChunk (file, destname, pos, count, opts) {
   if (start > size || end > size) {
     throw new Error('error position! ' + size + '[' + start + ',' + end + ']');
   }
-  let {hash=null, onprogress=null} = opts || {};
+  let { hash = null, onprogress = null } = opts || {};
   console.log('uploadFileChunk start! ', { name, size, hash, start, end });
 
   let blob = slice.call(file, start, end);
@@ -106,7 +104,7 @@ async function uploadFileChunk (file, destname, pos, count, opts) {
     throw result;
   }
   return result;
-};
+}
 
 /**
  * 结束上传，通知服务器结束此文件上传
@@ -125,7 +123,7 @@ async function uploadFileChunk (file, destname, pos, count, opts) {
  *  onprogress进度回调
  * }
  */
-async function uploadFileEnd (file, destname, opts) {
+async function uploadFileEnd(file, destname, opts) {
   if (!file) {
     throw new Error('no file!');
   }
@@ -134,7 +132,7 @@ async function uploadFileEnd (file, destname, opts) {
     throw new Error('no file.size!');
   }
   let name = file.name || opts.name || 'noname'; //blob类型没有名字,从opts的name中获取.
-  let {hash=null, onprogress=null} = opts || {};
+  let { hash = null, onprogress = null } = opts || {};
   console.log('uploadFileEnd:', { name, size, hash });
 
   let formData = new FormData();
@@ -149,13 +147,13 @@ async function uploadFileEnd (file, destname, opts) {
   }
 
   return result;
-};
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // 使用 async/await模式，比较容易理解
 ///////////////////////////////////////////////////////////////////////////////
 /**
- * 
+ *
  * @param {File} file 待上传的文件数据
  * @param {json} opts 选项参数
  * {
@@ -165,7 +163,7 @@ async function uploadFileEnd (file, destname, opts) {
  *  onprogress进度回调
  * }
  */
-async function uploadFile (file,opts) {
+async function uploadFile(file, opts) {
   if (!file) {
     throw new Error('no file!');
   }
@@ -177,12 +175,12 @@ async function uploadFile (file,opts) {
   if (!chunkSize) {
     throw new Error('no chunkSize!');
   }
-  let {chunkSize,onprogress=null, hash=null} = opts||{};
+  let { chunkSize, onprogress = null, hash = null } = opts || {};
   if (!chunkSize) chunkSize = DEFAULT_CHUNK_SIZE;
   let count = Math.ceil(size / chunkSize);
   console.log('uploadFile:', { name, size, hash, chunkSize, count });
 
-  let info = await uploadFileStart(file, {name, hash });
+  let info = await uploadFileStart(file, { name, hash });
   if (!info) {
     throw new Error('uploadFileStart fail!');
   }
@@ -216,8 +214,8 @@ async function uploadFile (file,opts) {
   // let lastResult =
   //   resultList.length > 0 ? resultList[resultList.length - 1] : null;
   // return lastResult;
-  let finalResult = await uploadFileEnd(file, destname, {hash} );
+  let finalResult = await uploadFileEnd(file, destname, { hash });
   return finalResult;
-};
+}
 
 export default uploadFile;

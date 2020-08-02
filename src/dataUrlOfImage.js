@@ -3,7 +3,7 @@
  * @param {Image} img 图片元素
  * @returns {dataUrl} 图片数据
  */
-function dataUrlOfImage (img) {
+function dataUrlOfImage(img) {
   // TODO: 会遇到跨域问题,无效
   let canvas = document.createElement('canvas');
   canvas.width = img.width;
@@ -18,7 +18,6 @@ function dataUrlOfImage (img) {
   // guess the original format, but be aware the using "image/jpg"
   // will re-encode the image.
   return canvas.toDataURL('image/png');
-};
-
+}
 
 export default dataUrlOfImage;

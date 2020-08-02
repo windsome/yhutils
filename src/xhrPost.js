@@ -5,7 +5,7 @@
  * @param {function} onprogress
  * @returns {json} 接口返回的数据.
  */
-function xhrPost (url, data, onprogress = null) {
+function xhrPost(url, data, onprogress = null) {
   return new Promise(function(resolve, reject) {
     if (!url || !data) {
       reject(new Error('error! url & data should not null!'));
@@ -53,6 +53,6 @@ function xhrPost (url, data, onprogress = null) {
     };
     xhr.send(data);
   });
-};
+}
 
 export default xhrPost;

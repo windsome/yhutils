@@ -4,15 +4,15 @@ import readFileBuffer from './readFileBufferPosCount';
 const DEFAULT_CHUNK_SIZE = 1024 * 1024;
 
 /**
- * 
+ *
  * @param {File} file 文件File对象
  * @param {json} opts 选项 {
- *    chunkSize 分片大小,默认为DEFAULT_CHUNK_SIZE, 
+ *    chunkSize 分片大小,默认为DEFAULT_CHUNK_SIZE,
  *    onprogress回调函数.默认为空.
  *  }
  */
-function calMd5sum (file, opts) {
-  let { onprogress=null, chunkSize = DEFAULT_CHUNK_SIZE} = opts || {};
+function calMd5sum(file, opts) {
+  let { onprogress = null, chunkSize = DEFAULT_CHUNK_SIZE } = opts || {};
   if (!chunkSize) chunkSize = DEFAULT_CHUNK_SIZE;
   return new Promise((resolve, reject) => {
     if (!file) {
@@ -57,6 +57,6 @@ function calMd5sum (file, opts) {
         reject(error);
       });
   });
-};
+}
 
 export default calMd5sum;

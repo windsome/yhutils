@@ -16,7 +16,7 @@ import uploadFile from './uploadChunk';
  *  onprogress 进度函数
  * }
  */
-export async function hash$UploadFile (file, opts) {
+export async function hash$UploadFile(file, opts) {
   if (!file) {
     throw new Error('no file!');
   }
@@ -24,17 +24,16 @@ export async function hash$UploadFile (file, opts) {
   if (!totalSize) {
     throw new Error('no totalSize!');
   }
-  let { chunkSize, onprogress} = opts||{};
+  let { chunkSize, onprogress } = opts || {};
   let name = file.name || opts.name || 'noname'; //blob类型没有名字,从opts的name中获取.
 
-  let hash = await calMd5sum(
-    file,
-    { chunkSize,
+  let hash = await calMd5sum(file, {
+    chunkSize,
     onprogress: percent => {
       onprogress && onprogress({ action: 'md5sum', percent, name });
     }
   });
-  let ret = await uploadFile( file,{
+  let ret = await uploadFile(file, {
     chunkSize,
     hash,
     onprogress: evt => {
@@ -43,14 +42,14 @@ export async function hash$UploadFile (file, opts) {
     }
   });
   return ret;
-};
+}
 
 /**
  * 将dataUrl转成File后hash并上传.
  * @param {json} data {dataUrl, name}
  * @param {*} opts {chunkSize, onprogress}
  */
-export const hash$UploadDataURL = async (data,opts) => {
+export const hash$UploadDataURL = async (data, opts) => {
   if (!data || !data.dataUrl) {
     throw new Error('no dataUrl!');
   }
@@ -66,14 +65,18 @@ export const hash$UploadDataURL = async (data,opts) => {
  *  chunkSize, onprogress
  * }
  */
-export async function scale$hash$uploadFile (  file ,opts) {
-    if (!opts) opts = {};
-  let fileScaled = await imageFileScaleAsync(file, { maxWidth: opts.maxWidth, maxHeight: opts.maxWidth, keepRatio: opts.keepRatio});
+export async function scale$hash$uploadFile(file, opts) {
+  if (!opts) opts = {};
+  let fileScaled = await imageFileScaleAsync(file, {
+    maxWidth: opts.maxWidth,
+    maxHeight: opts.maxWidth,
+    keepRatio: opts.keepRatio
+  });
   return await hash$UploadFile(fileScaled, {
     chunkSize: opts.chunkSize,
     onprogress: opts.onprogress
   });
-};
+}
 
 /**
  * 将Image标签的图像数据通过dataUrl转成File并哈希上传.
@@ -81,7 +84,7 @@ export async function scale$hash$uploadFile (  file ,opts) {
  * @param {Image} img Image元素
  * @param {json} opts 参数{name, chunkSize, onprogress}
  */
-export async function hash$UploadImgElement (img, opts) {
+export async function hash$UploadImgElement(img, opts) {
   // TODO: 这个方法无效,会涉及跨域,用服务器端上传替代.
   if (!img) {
     throw new Error('no img!');
@@ -91,15 +94,11 @@ export async function hash$UploadImgElement (img, opts) {
     throw new Error('no dataUrl!');
   }
 
-  let {name, chunkSize, onprogress} = opts || {};
+  let { name, chunkSize, onprogress } = opts || {};
   name = name || 'wxmp';
-  let blob = dataURL2Blob({dataUrl,name});
-  return await hash$UploadFile(
-    blob,
-    {chunkSize,
-    onprogress
-  });
-};
+  let blob = dataURL2Blob({ dataUrl, name });
+  return await hash$UploadFile(blob, { chunkSize, onprogress });
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // List组合函数!
@@ -108,9 +107,10 @@ export async function hash$UploadImgElement (img, opts) {
  * 将一组dataUrl哈希上传
  * TODO: 未使用
  * @param {Array} datas dataUrl数组 [{dataUrl,name}...]
- * @param {json} 参数选项 {chunkSize, onprogress} 
- */ 
-export async function hash$UploadDataURLs  ( datas, opts) {
+ * @param {json} 参数选项 {chunkSize, onprogress}
+ */
+
+export async function hash$UploadDataURLs(datas, opts) {
   if (!datas || datas.length == 0) {
     throw new Error('no datas!');
   }
@@ -121,26 +121,25 @@ export async function hash$UploadDataURLs  ( datas, opts) {
     resultList.push(result);
   }
   return resultList;
-};
+}
 
 /**
  * 将FileInput中多个文件上传.
  * @param {Event} evt FileInput元素的的回调.其中有files用于上传.
  */
-export async function uploadFileInput (evt) {
+export async function uploadFileInput(evt) {
   let resultList = [];
   let files = evt.target.files;
   for (let i = 0; i < files.length; i++) {
     let file = files[i];
-    let result = await uploadFile(
-      file,
-      {onprogress: evt => {
+    let result = await uploadFile(file, {
+      onprogress: evt => {
         console.log('uploadFileInput', evt);
       }
     });
     resultList.push(result);
   }
   return resultList;
-};
+}
 
 export default hash$UploadFile;

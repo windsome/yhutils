@@ -4,7 +4,7 @@
  * /home/dev/images/logo.jpg => logo.jpg
  * @param {string} url url地址或文件路径
  */
-export function filename (url) {
+export function filename(url) {
   if (url) {
     let m = url.toString().match(/.*\/(.+?)\./);
     if (m && m.length > 1) {
@@ -12,6 +12,6 @@ export function filename (url) {
     }
   }
   return null;
-};
+}
 
 export default filename;
