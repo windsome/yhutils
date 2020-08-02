@@ -93,7 +93,12 @@ export async function calMd5sumAsync(file, opts) {
 
   let hash = spark.end().toUpperCase();
   let endTime = new Date().getTime();
-  console.log('calMd5sumAsync:',{totalSize, lastPos, hash, duration:endTime - startTime});
+  console.log('calMd5sumAsync:', {
+    totalSize,
+    lastPos,
+    hash,
+    duration: endTime - startTime
+  });
   return hash;
 }
 
