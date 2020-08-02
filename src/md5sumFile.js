@@ -70,7 +70,7 @@ export async function calMd5sumAsync(file, opts) {
   }
 
   let totalSize = file.size;
-  console.log('calMd5sum start! fileSize=' + totalSize);
+  // console.log('calMd5sum start! fileSize=' + totalSize);
   let startTime = new Date().getTime();
   let spark = new SparkMD5.ArrayBuffer();
 
@@ -89,18 +89,11 @@ export async function calMd5sumAsync(file, opts) {
     return pos;
   }
 
-  let readSize = await loop();
+  let lastPos = await loop();
 
   let hash = spark.end().toUpperCase();
   let endTime = new Date().getTime();
-  console.log(
-    'readSize:' +
-      readSize +
-      ', md5sum:' +
-      hash +
-      ', time:' +
-      (endTime - startTime)
-  );
+  console.log('calMd5sumAsync:',{totalSize, lastPos, hash, duration:endTime - startTime});
   return hash;
 }
 
