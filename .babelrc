@@ -22,7 +22,7 @@
       "plugins": [
         ["transform-es2015-modules-umd", { "loose": true }]
       ],
-      "moduleId": "Wutils"
+      "moduleId": "yhutils"
     },
     "test": {
       "plugins": [

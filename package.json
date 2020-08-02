@@ -1,13 +1,13 @@
 {
-  "name": "wutils",
+  "name": "yhutils",
   "version": "1.0.0",
-  "description": "utils for windpress",
+  "description": "utils for yihong, by windsome(36081189@qq.com)",
   "main": "lib/index.js",
   "jsnext:main": "es/index.js",
   "module": "es/index.js",
   "scripts": {
     "compile:commonjs": "better-npm-run compile:commonjs",
-    "compile:umdmin": "uglifyjs dist/wutils.js -m -o dist/wutils.min.js",
+    "compile:umdmin": "uglifyjs dist/yhutils.js -m -o dist/yhutils.min.js",
     "compile:umd": "better-npm-run compile:umd",
     "compile:es": "babel -d es/ src/",
     "compile": "npm run compile:commonjs && npm run compile:umd && npm run compile:umdmin && npm run compile:es",
@@ -25,13 +25,13 @@
       }
     },
     "compile:umd": {
-      "command": "mkdirp dist/ && babel -o dist/wutils.js src/",
+      "command": "mkdirp dist/ && babel -o dist/yhutils.js src/",
       "env": {
         "NODE_ENV": "umd"
       }
     }
   },
-  "author": "",
+  "author": "windsome.feng",
   "license": "ISC",
   "devDependencies": {
     "babel-cli": "^6.7.5",
