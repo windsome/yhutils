@@ -1,7 +1,7 @@
 import xhrPost from './xhrPost';
 
 // const PREFIX='http://localhost:3000'
-const PREFIX = '';
+const PREFIX = 'http://localhost:11717';
 const CHUNKEDV2_URL_START = PREFIX + '/apis/v1/upload/chunked/start';
 const CHUNKEDV2_URL_UPLOAD = PREFIX + '/apis/v1/upload/chunked/upload';
 const CHUNKEDV2_URL_END = PREFIX + '/apis/v1/upload/chunked/end';
