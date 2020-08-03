@@ -172,9 +172,6 @@ async function uploadFile(file, opts) {
     throw new Error('no file.size!');
   }
   let name = file.name || opts.name || 'noname'; //blob类型没有名字,从opts的name中获取.
-  if (!chunkSize) {
-    throw new Error('no chunkSize!');
-  }
   let { chunkSize, onprogress = null, hash = null } = opts || {};
   if (!chunkSize) chunkSize = DEFAULT_CHUNK_SIZE;
   let count = Math.ceil(size / chunkSize);
