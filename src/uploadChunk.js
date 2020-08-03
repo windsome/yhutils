@@ -1,10 +1,10 @@
 import xhrPost from './xhrPost';
 
 // const PREFIX='http://localhost:3000'
-const PREFIX = 'http://localhost:11717';
-const CHUNKEDV2_URL_START = PREFIX + '/apis/v1/upload/chunked/start';
-const CHUNKEDV2_URL_UPLOAD = PREFIX + '/apis/v1/upload/chunked/upload';
-const CHUNKEDV2_URL_END = PREFIX + '/apis/v1/upload/chunked/end';
+// const PREFIX = 'http://localhost:11717';
+const CHUNKEDV2_URL_START =  '/apis/v1/upload/chunked/start';
+const CHUNKEDV2_URL_UPLOAD = '/apis/v1/upload/chunked/upload';
+const CHUNKEDV2_URL_END = '/apis/v1/upload/chunked/end';
 const DEFAULT_CHUNK_SIZE = 1024 * 1024;
 
 let slice =
@@ -47,7 +47,7 @@ async function uploadFileStart(file, opts = {}) {
   formData.append('name', name);
   formData.append('size', size);
   formData.append('hash', hash);
-  let result = await xhrPost(CHUNKEDV2_URL_START, formData, onprogress);
+  let result = await xhrPost(opts.urlprefix+CHUNKEDV2_URL_START, formData, onprogress);
   if (result && result.errcode) {
     throw result;
   }
@@ -99,7 +99,7 @@ async function uploadFileChunk(file, destname, pos, count, opts) {
   formData.append('start', start);
   formData.append('end', end);
 
-  let result = await xhrPost(CHUNKEDV2_URL_UPLOAD, formData, onprogress);
+  let result = await xhrPost(opts.urlprefix+CHUNKEDV2_URL_UPLOAD, formData, onprogress);
   if (result && result.errcode) {
     throw result;
   }
@@ -141,7 +141,7 @@ async function uploadFileEnd(file, destname, opts) {
   formData.append('destname', destname);
   formData.append('size', size);
   formData.append('hash', hash);
-  let result = await xhrPost(CHUNKEDV2_URL_END, formData, onprogress);
+  let result = await xhrPost(opts.urlprefix+CHUNKEDV2_URL_END, formData, onprogress);
   if (result && result.errcode) {
     throw result;
   }
@@ -160,6 +160,7 @@ async function uploadFileEnd(file, destname, opts) {
  *  hash文件哈希值,
  *  name文件名称,对于Blob类型无法在file中设置名称的有效,
  *  chunkSize 分块大小,默认为DEFAULT_CHUNK_SIZE
+ *  urlprefix 上传相关URL前缀, 默认为'', 可以是 'http://localhost:11717'
  *  onprogress进度回调
  * }
  */
@@ -172,12 +173,13 @@ async function uploadFile(file, opts) {
     throw new Error('no file.size!');
   }
   let name = file.name || opts.name || 'noname'; //blob类型没有名字,从opts的name中获取.
-  let { chunkSize, onprogress = null, hash = null } = opts || {};
+  let { chunkSize, onprogress = null, hash = null, urlprefix } = opts || {};
+  if (!urlprefix) urlprefix = '';
   if (!chunkSize) chunkSize = DEFAULT_CHUNK_SIZE;
   let count = Math.ceil(size / chunkSize);
   console.log('uploadFile:', { name, size, hash, chunkSize, count });
 
-  let info = await uploadFileStart(file, { name, hash });
+  let info = await uploadFileStart(file, { name, hash, urlprefix });
   if (!info) {
     throw new Error('uploadFileStart fail!');
   }
@@ -200,7 +202,8 @@ async function uploadFile(file, opts) {
           (100 * (i * chunkSize + (loaded / total) * (end - start))) / size
         );
         onprogress && onprogress({ action: 'upload', name, percent });
-      }
+      },
+      urlprefix
     };
     let result = await uploadFileChunk(file, destname, start, sliceSize, opts);
     resultList.push(result);
@@ -211,7 +214,7 @@ async function uploadFile(file, opts) {
   // let lastResult =
   //   resultList.length > 0 ? resultList[resultList.length - 1] : null;
   // return lastResult;
-  let finalResult = await uploadFileEnd(file, destname, { hash });
+  let finalResult = await uploadFileEnd(file, destname, { hash,urlprefix });
   return finalResult;
 }
 
