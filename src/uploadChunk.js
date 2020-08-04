@@ -7,9 +7,6 @@ const CHUNKEDV2_URL_UPLOAD = '/apis/v1/upload/chunked/upload';
 const CHUNKEDV2_URL_END = '/apis/v1/upload/chunked/end';
 const DEFAULT_CHUNK_SIZE = 1024 * 1024;
 
-let slice =
-  File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice;
-
 /**
  * 初始化上传信息，将文件及hash告知服务器，服务器判断是否上传。
  *
@@ -88,6 +85,8 @@ async function uploadFileChunk(file, destname, pos, count, opts) {
   let { hash = null, onprogress = null } = opts || {};
   console.log('uploadFileChunk start! ', { name, size, hash, start, end });
 
+  let slice =
+  File.prototype.slice || File.prototype.mozSlice || File.prototype.webkitSlice; // 为了使nextjs服务器端不报错,从外面移到这里.
   let blob = slice.call(file, start, end);
   let formData = new FormData();
   formData.append('cmd', 'upload');
